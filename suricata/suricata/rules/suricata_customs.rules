@@ -1,0 +1,77 @@
+# SSH
+
+alert ssh any any -> any any (msg:"SURICATA SSH invalid banner"; flow:established; app-layer-event:ssh.invalid_banner; classtype:protocol-command-decode; sid:2228000; rev:1;)
+alert ssh any any -> any any (msg:"SURICATA SSH too long banner"; flow:established; app-layer-event:ssh.long_banner; classtype:protocol-command-decode; sid:2228001; rev:1;)
+alert ssh any any -> any any (msg:"SURICATA SSH invalid record"; flow:established; app-layer-event:ssh.invalid_record; classtype:protocol-command-decode; sid:2228002; rev:1;)
+alert ssh any any -> any any (msg:"SSH TRAFFIC on non-SSH port"; flow:to_client, not_established; classtype: misc-attack; target: dest_ip; sid:1000000;)
+
+# HTTP
+
+alert http any any -> any any (msg:"SURICATA HTTP unknown error"; flow:established; app-layer-event:http.unknown_error; flowint:http.anomaly.count,+,1; classtype:protocol-command-decode; sid:2221000; rev:1;)
+alert http any any -> any any (msg:"SURICATA HTTP gzip decompression failed"; flow:established; app-layer-event:http.gzip_decompression_failed; flowint:http.anomaly.count,+,1; classtype:protocol-command-decode; sid:2221001; rev:1;)
+alert http any any -> any any (msg:"SURICATA HTTP request field missing colon"; flow:established,to_server; app-layer-event:http.request_field_missing_colon; flowint:http.anomaly.count,+,1; classtype:protocol-command-decode; sid:2221002; rev:1;)
+alert http any any -> any any (msg:"SURICATA HTTP request server port doesn't match TCP port"; flow:established,to_server; app-layer-event:http.request_server_port_tcp_port_mismatch; flowint:http.anomaly.count,+,1; classtype:protocol-command-decode; sid:2221026; rev:1;)
+alert http any any -> any any (msg:"SURICATA HTTP Host part of URI is invalid"; flow:established,to_server; app-layer-event:http.request_uri_host_invalid; flowint:http.anomaly.count,+,1; classtype:protocol-command-decode; sid:2221027; rev:1;)
+alert http any any -> any any (msg:"SURICATA HTTP Host header invalid"; flow:established,to_server; app-layer-event:http.request_header_host_invalid; flowint:http.anomaly.count,+,1; classtype:protocol-command-decode; sid:2221028; rev:1;)
+alert http any any -> any any (msg:"SURICATA HTTP URI terminated by non-compliant character"; flow:established,to_server; app-layer-event:http.uri_delim_non_compliant; flowint:http.anomaly.count,+,1; classtype:protocol-command-decode; sid:2221029; rev:1;)
+alert http any any -> any any (msg:"SURICATA HTTP METHOD terminated by non-compliant character"; flow:established,to_server; app-layer-event:http.method_delim_non_compliant; flowint:http.anomaly.count,+,1; classtype:protocol-command-decode; sid:2221030; rev:1;)
+alert http any any -> any any (msg:"SURICATA HTTP Request line with leading whitespace"; flow:established,to_server; app-layer-event:http.request_line_leading_whitespace; flowint:http.anomaly.count,+,1; classtype:protocol-command-decode; sid:2221031; rev:1;)
+alert http any any -> any any (msg:"SURICATA HTTP Request too many encoding layers"; flow:established,to_server; app-layer-event:http.too_many_encoding_layers; flowint:http.anomaly.count,+,1; classtype:protocol-command-decode; sid:2221032; rev:1;)
+alert http any any -> any any (msg:"SURICATA HTTP Request abnormal Content-Encoding header"; flow:established,to_server; app-layer-event:http.abnormal_ce_header; flowint:http.anomaly.count,+,1; classtype:protocol-command-decode; sid:2221033; rev:1;)
+alert http any any -> any any (msg:"SURICATA HTTP Request unrecognized authorization method"; flow:established,to_server; app-layer-event:http.request_auth_unrecognized; flowint:http.anomaly.count,+,1; classtype:protocol-command-decode; sid:2221034; rev:1;)
+alert http any any -> any any (msg:"SURICATA HTTP Response abnormal chunked for transfer-encoding"; flow:established,to_client; app-layer-event:http.response_abnormal_transfer_encoding; flowint:http.anomaly.count,+,1; classtype:protocol-command-decode; sid:2221038; rev:1;)
+alert http any any -> any any (msg:"SURICATA HTTP Response chunked with HTTP 0.9 or 1.0"; flow:established,to_client; app-layer-event:http.response_chunked_old_proto; flowint:http.anomaly.count,+,1; classtype:protocol-command-decode; sid:2221039; rev:1;)
+alert http any any -> any any (msg:"SURICATA HTTP Response invalid protocol"; flow:established,to_client; app-layer-event:http.response_invalid_protocol; flowint:http.anomaly.count,+,1; classtype:protocol-command-decode; sid:2221040; rev:1;)
+alert http any any -> any any (msg:"SURICATA HTTP Response invalid status"; flow:established,to_client; app-layer-event:http.response_invalid_status; flowint:http.anomaly.count,+,1; classtype:protocol-command-decode; sid:2221041; rev:1;)
+alert http any any -> any any (msg:"SURICATA HTTP Request line incomplete"; flow:established,to_server; app-layer-event:http.request_line_incomplete; flowint:http.anomaly.count,+,1; classtype:protocol-command-decode; sid:2221042; rev:1;)
+alert http any any -> any any (msg:"SURICATA HTTP Request double encoded URI"; flow:established,to_server; app-layer-event:http.double_encoded_uri; flowint:http.anomaly.count,+,1; classtype:protocol-command-decode; sid:2221043; rev:1;)
+alert http any any -> any any (msg:"SURICATA HTTP Invalid Request line"; flow:established,to_server; app-layer-event:http.request_line_invalid; flowint:http.anomaly.count,+,1; classtype:protocol-command-decode; sid:2221044; rev:1;)
+alert http any any -> any any (msg:"SURICATA HTTP Unexpected Request body"; flow:established,to_server; app-layer-event:http.request_body_unexpected; flowint:http.anomaly.count,+,1; classtype:protocol-command-decode; sid:2221045; rev:1;)
+alert http any any -> any any (msg:"SURICATA HTTP too many warnings"; flow:established; app-layer-event:http.too_many_warnings; flowint:http.anomaly.count,+,1; classtype:protocol-command-decode; sid:2221050; rev:1;)
+alert http any any -> any any (msg:"SURICATA HTTP invalid Range header value"; flow:established; app-layer-event:http.range_invalid; flowint:http.anomaly.count,+,1; classtype:protocol-command-decode; sid:2221051; rev:1;)
+alert http any any -> any any (msg:"SURICATA HTTP file name too long"; flow:established; app-layer-event:http.file_name_too_long; flowint:http.anomaly.count,+,1; classtype:protocol-command-decode; sid:2221052; rev:1;)
+alert http any any -> any any (msg:"SURICATA HTTP failed protocol change"; flow:established; app-layer-event:http.failed_protocol_change; flowint:http.anomaly.count,+,1; classtype:protocol-command-decode; sid:2221053; rev:1;)
+
+# FTP
+
+alert ftp any any -> any any (msg:"SURICATA FTP Request command too long"; flow:to_server; app-layer-event:ftp.request_command_too_long; classtype:protocol-command-decode; sid:2232000; rev:1;)
+alert ftp any any -> any any (msg:"SURICATA FTP Response command too long"; flow:to_client; app-layer-event:ftp.response_command_too_long; classtype:protocol-command-decode; sid:2232001; rev:1;)
+
+# TLS
+
+alert tls any any -> any any (msg:"SURICATA TLS invalid SSLv2 header"; flow:established; app-layer-event:tls.invalid_sslv2_header; flowint:tls.anomaly.count,+,1; classtype:protocol-command-decode; sid:2230000; rev:1;)
+alert tls any any -> any any (msg:"SURICATA TLS invalid TLS header"; flow:established; app-layer-event:tls.invalid_tls_header; flowint:tls.anomaly.count,+,1; classtype:protocol-command-decode; sid:2230001; rev:1;)
+alert tls any any -> any any (msg:"SURICATA TLS invalid record version"; flow:established; app-layer-event:tls.invalid_record_version; flowint:tls.anomaly.count,+,1; classtype:protocol-command-decode; sid:2230015; rev:1;)
+alert tls any any -> any any (msg:"SURICATA TLS invalid record type"; flow:established; app-layer-event:tls.invalid_record_type; flowint:tls.anomaly.count,+,1; classtype:protocol-command-decode; sid:2230002; rev:1;)
+alert tls any any -> any any (msg:"SURICATA TLS invalid handshake message"; flow:established; app-layer-event:tls.invalid_handshake_message; flowint:tls.anomaly.count,+,1; classtype:protocol-command-decode; sid:2230003; rev:1;)
+alert tls any any -> any any (msg:"SURICATA TLS invalid certificate"; flow:established; app-layer-event:tls.invalid_certificate; flowint:tls.anomaly.count,+,1; classtype:protocol-command-decode; sid:2230004; rev:1;)
+alert tls any any -> any any (msg:"SURICATA TLS certificate invalid length"; flow:established; app-layer-event:tls.certificate_invalid_length; flowint:tls.anomaly.count,+,1; classtype:protocol-command-decode; sid:2230007; rev:1;)
+alert tls any any -> any any (msg:"SURICATA TLS error message encountered"; flow:established; app-layer-event:tls.error_message_encountered; flowint:tls.anomaly.count,+,1; classtype:protocol-command-decode; sid:2230009; rev:1;)
+alert tls any any -> any any (msg:"SURICATA TLS invalid record/traffic"; flow:established; app-layer-event:tls.invalid_ssl_record; flowint:tls.anomaly.count,+,1; classtype:protocol-command-decode; sid:2230010; rev:1;)
+alert tls any any -> any any (msg:"SURICATA TLS heartbeat encountered"; flow:established; app-layer-event:tls.heartbeat_message; flowint:tls.anomaly.count,+,1; classtype:protocol-command-decode; sid:2230011; rev:1;)
+alert tls any any -> any any (msg:"SURICATA TLS overflow heartbeat encountered, possible exploit attempt (heartbleed)"; flow:established; app-layer-event:tls.overflow_heartbeat_message; flowint:tls.anomaly.count,+,1; classtype:protocol-command-decode; reference:cve,2014-0160; sid:2230012; rev:1;)
+alert tls any any -> any any (msg:"SURICATA TLS invalid heartbeat encountered, possible exploit attempt (heartbleed)"; flow:established; app-layer-event:tls.invalid_heartbeat_message; flowint:tls.anomaly.count,+,1; classtype:protocol-command-decode; reference:cve,2014-0160; sid:2230013; rev:1;)
+alert tls any any -> any any (msg:"SURICATA TLS invalid encrypted heartbeat encountered, possible exploit attempt (heartbleed)"; flow:established; app-layer-event:tls.dataleak_heartbeat_mismatch; flowint:tls.anomaly.count,+,1; classtype:protocol-command-decode; reference:cve,2014-0160; sid:2230014; rev:1;)
+alert tls any any -> any any (msg:"SURICATA TLS multiple SNI extensions"; flow:established,to_server; app-layer-event:tls.multiple_sni_extensions; flowint:tls.anomaly.count,+,1; classtype:protocol-command-decode; sid:2230016; rev:1;)
+alert tls any any -> any any (msg:"SURICATA TLS invalid SNI type"; flow:established,to_server; app-layer-event:tls.invalid_sni_type; flowint:tls.anomaly.count,+,1; classtype:protocol-command-decode; sid:2230017; rev:1;)
+alert tls any any -> any any (msg:"SURICATA TLS invalid SNI length"; flow:established,to_server; app-layer-event:tls.invalid_sni_length; flowint:tls.anomaly.count,+,1; classtype:protocol-command-decode; sid:2230018; rev:1;)
+alert tls any any -> any any (msg:"SURICATA TLS handshake invalid length"; flow:established; app-layer-event:tls.handshake_invalid_length; flowint:tls.anomaly.count,+,1; classtype:protocol-command-decode; sid:2230019; rev:1;)
+alert tls any any -> any any (msg:"SURICATA TLS too many records in packet"; flow:established; app-layer-event:tls.too_many_records_in_packet; flowint:tls.anomaly.count,+,1; classtype:protocol-command-decode; sid:2230020; rev:1;)
+alert tls any any -> any any (msg:"SURICATA TLS certificate invalid version"; flow:established; app-layer-event:tls.certificate_invalid_version; flowint:tls.anomaly.count,+,1; classtype:protocol-command-decode; sid:2230021; rev:1;)
+alert tls any any -> any any (msg:"SURICATA TLS certificate invalid serial"; flow:established; app-layer-event:tls.certificate_invalid_serial; flowint:tls.anomaly.count,+,1; classtype:protocol-command-decode; sid:2230022; rev:1;)
+alert tls any any -> any any (msg:"SURICATA TLS certificate invalid algorithm identifier"; flow:established; app-layer-event:tls.certificate_invalid_algorithmidentifier; flowint:tls.anomaly.count,+,1; classtype:protocol-command-decode; sid:2230023; rev:1;)
+alert tls any any -> any any (msg:"SURICATA TLS certificate invalid x509 name"; flow:established; app-layer-event:tls.certificate_invalid_x509name; flowint:tls.anomaly.count,+,1; classtype:protocol-command-decode; sid:2230024; rev:1;)
+alert tls any any -> any any (msg:"SURICATA TLS certificate invalid date"; flow:established; app-layer-event:tls.certificate_invalid_date; flowint:tls.anomaly.count,+,1; classtype:protocol-command-decode; sid:2230025; rev:1;)
+alert tls any any -> any any (msg:"SURICATA TLS certificate invalid extensions"; flow:established; app-layer-event:tls.certificate_invalid_extensions; flowint:tls.anomaly.count,+,1; classtype:protocol-command-decode; sid:2230026; rev:1;)
+alert tls any any -> any any (msg:"SURICATA TLS certificate invalid der"; flow:established; app-layer-event:tls.certificate_invalid_der; flowint:tls.anomaly.count,+,1; classtype:protocol-command-decode; sid:2230027; rev:1;)
+alert tls any any -> any any (msg:"SURICATA TLS certificate invalid subject"; flow:established; app-layer-event:tls.certificate_invalid_subject; flowint:tls.anomaly.count,+,1; classtype:protocol-command-decode; sid:2230028; rev:1;)
+alert tls any any -> any any (msg:"SURICATA TLS certificate invalid issuer"; flow:established; app-layer-event:tls.certificate_invalid_issuer; flowint:tls.anomaly.count,+,1; classtype:protocol-command-decode; sid:2230029; rev:1;)
+alert tls any any -> any any (msg:"SURICATA TLS certificate invalid validity"; flow:established; app-layer-event:tls.certificate_invalid_validity; flowint:tls.anomaly.count,+,1; classtype:protocol-command-decode; sid:2230030; rev:1;)
+
+alert tcp any any -> any 80 (msg:"Alerte - Accès au serveur Web sur le port 80"; sid:1000001; rev:1;)
+
+# NMAP
+
+alert tcp any any -> any [21,22,23,25,80,88,110,135,137,138,139,161,389,443,445,465,514,587,636,995,1025,1026,1027,1028,1029,1433,1720,3306,3389,5900,8443,11211,27017] (msg:"SUSP PORT PROBE KNOWN TCP (type -sS)"; flow:to_server,stateless; flags:S; window:1024; tcp.mss:1460; threshold:type threshold, track by_src, count 4, seconds 1100; classtype:attempted-recon; sid:1000001; priority:2; rev:2;)
+alert tcp any any -> any [21,22,23,25,80,88,110,135,137,138,139,161,389,443,445,465,514,587,636,995,1025,1026,1027,1028,1029,1433,1720,3306,3389,5900,8443,11211,27017] (msg:"POSSBL SCAN NMAP KNOWN TCP (type -sS)"; flow:to_server,stateless; flags:S; window:1024; tcp.mss:1460; threshold:type threshold, track by_src, count 3, seconds 1210; classtype:attempted-recon; sid:1000002; priority:2; rev:2;)
+alert udp any any -> any [53,67,68,69,123,161,162,389,520,1026,1027,1028,1029,1434,1900,11211,12345,27017] (msg:"POSSBL SCAN NMAP KNOWN UDP (type -sU)"; flow:to_server,stateless; classtype:attempted-recon; sid:1000003; priority:2; rev:7; threshold:type limit, track by_src, count 3, seconds 1210; dsize:0;)
